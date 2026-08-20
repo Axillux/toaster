@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docs</title>
+  <link rel="icon" type="image/png" href="pfp.png">
+</head>
+<body>
+
+  <p><a href="/">&larr; Back to Toaster</a></p>
+
+  <h1>Toaster Docs</h1>
+
+  <h2>Getting started</h2>
+  <ol>
+    <li><a href="https://discord.com/oauth2/authorize?client_id=1536141767760679082">Add Toaster</a> to your server.</li>
+    <li>Give its role the permissions you want it to use (see below).</li>
+    <li>Run <code>/settings</code> and pick a punishment and a log channel.</li>
+  </ol>
+
+  <h2>How it works</h2>
+  <p>
+    Toaster reads every message in the servers it is in. Text and images are turned into
+    vectors and compared against a scam database. On a match:
+  </p>
+  <ol>
+    <li>The scam message is deleted immediately.</li>
+    <li>The scammer gets a DM explaining why.</li>
+    <li>The punishment from your <code>/settings</code> is applied.</li>
+    <li>A sweep removes every other message the account sent, in all channels and threads, and repeats until a pass finds nothing left.</li>
+  </ol>
+  <p>
+    A meme database overrides scam matches on known-good images, so regular memes are not
+    punished. One detection also punishes the account in every other server Toaster is in,
+    using each server's own settings.
+  </p>
+
+  <h2>Commands</h2>
+  <ul>
+    <li><code>/scan days:1-90</code> — clean up old scam. Options: <code>dry_run:True</code> (report only, delete nothing), <code>channel</code> (scan one channel only). Without <code>dry_run</code> it deletes found scam and punishes the senders.</li>
+    <li><code>/settings</code> — punishment, mute duration, log channel, DM template.</li>
+    <li><code>/report</code> — detections, deletions and punishments for this server, or globally with <code>scope:global</code>.</li>
+    <li><code>/about</code> — what the bot is, server and user counts.</li>
+    <li><code>/avatar [user]</code> — full-size avatar.</li>
+    <li><code>/legal</code> — Privacy Policy and Terms of Service links.</li>
+    <li><code>/ping</code> — latency.</li>
+  </ul>
+
+  <h2>/settings</h2>
+  <ul>
+    <li><strong>Scam Punishment</strong> — mute, kick (default) or ban.</li>
+    <li><strong>Scam Mute Duration</strong> — 1 to 28 days, used when the punishment is mute.</li>
+    <li><strong>Log Channel</strong> — where scam alerts, scan progress and results are posted.</li>
+    <li><strong>DM Template</strong> — the DM text sent to the scammer. Placeholders: <code>{action}</code>, <code>{server}</code>, <code>{days}</code>.</li>
+  </ul>
+
+  <h2>/scan</h2>
+  <p>
+    Walks channel history back up to 90 days and applies the same detection as live
+    moderation. Progress is posted live to the log channel, including a direct link to
+    every scam message the moment it is found. When it finishes, the same message becomes
+    the summary: how many messages were checked, what was found, deleted, and whether
+    anything failed. Detected scam variants are sent to the bot owner for review.
+  </p>
+  <p>
+    Run it with <code>dry_run:True</code> first to preview what would be deleted, then
+    without it to actually clean up. Discord rate limits are handled automatically, so
+    large scans simply take longer.
+  </p>
+
+  <h2>What the bot needs</h2>
+  <ul>
+    <li>Delete messages: <strong>Manage Messages</strong>, View Channel, Read Message History.</li>
+    <li>Kick: <strong>Kick Members</strong>.</li>
+    <li>Ban: <strong>Ban Members</strong>.</li>
+    <li>Mute: <strong>Moderate Members</strong> (Timeout Members).</li>
+    <li>The bot's role must be above the members it should punish. Server owners cannot be punished.</li>
+    <li>For the log channel: View Channel and Send Messages there.</li>
+  </ul>
+
+  <h2>Review cards</h2>
+  <p>
+    Every detected scam is also sent to the owner as a card with the image and buttons:
+    add to the scam database, add to the meme database, or ignore. New variants approved
+    this way improve detection for everyone. Server admins see every incident in their
+    log channel.
+  </p>
+
+  <h2>Notes</h2>
+  <ul>
+    <li>The bot never pings anyone. All mentions are rendered as plain text.</li>
+    <li>DMs are sent only to users who were punished.</li>
+    <li>Detection can make mistakes. Check the log channel and adjust the database through review cards.</li>
+    <li>DMs (direct messages) are not moderated.</li>
+  </ul>
+
+  <hr>
+
+  <p><a href="/">Toaster</a> &nbsp;|&nbsp; <a href="/privacy">Privacy Policy</a> &nbsp;|&nbsp; <a href="/tos">Terms of Service</a></p>
+
+</body>
+</html>

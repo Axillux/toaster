@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Toaster</title>
   <link rel="icon" type="image/png" href="pfp.png">
-  <meta name="description" content="Toaster is a Discord bot that detects and deletes MrBeast-style scam waves automatically.">
+  <meta name="description" content="Toaster is a bot that deletes MrBeast, Andrew Tate and etc. scams. (crypto casinos to be short). And yeah that's it.">
 </head>
 <body>
 
@@ -17,28 +17,29 @@
 
   <h2>What it does</h2>
   <ul>
-    <li><strong>Real-time detection.</strong> Every message's text and images are compared against a scam-reference database using AI embeddings (NVIDIA NIM, model llama-nemotron-embed-vl-1b-v2). Re-cropped or re-compressed scam images still match.</li>
-    <li><strong>Instant action.</strong> The scam message is deleted immediately, the scammer gets a DM, and the punishment configured by server admins is applied: timeout (up to 28 days), kick, or ban.</li>
-    <li><strong>Whole-wave cleanup.</strong> When a compromised account spams several channels at once, Toaster records the entire wave and removes every message by the scammer across all channels and threads, re-checking until nothing is left.</li>
-    <li><strong>Cross-server protection.</strong> One detection removes the account from every server Toaster is in. Each server keeps its own punishment setting and incident log.</li>
-    <li><strong>History backfill.</strong> Server already flooded? /scan walks up to 90 days of history, deletes found scam, punishes senders, and reports live results. Dry-run mode previews everything without deleting.</li>
+    <li><strong>Real-time detection.</strong> AI compares every message's text and images against a scam database.</li>
+    <li><strong>Instant action.</strong> The scam is deleted, the scammer gets a DM, then the punishment you pick: timeout, kick, or ban.</li>
+    <li><strong>Whole-wave cleanup.</strong> Every message the scammer sent is removed from all channels, re-checked until clean.</li>
+    <li><strong>Cross-server.</strong> One detection removes the account from every server Toaster is in.</li>
+    <li><strong>History backfill.</strong> /scan cleans up to 90 days of old scam. Dry-run mode previews first.</li>
   </ul>
 
   <h2>Commands</h2>
   <ul>
-    <li><code>/scan days:90</code> — backfill sweep of history: find and delete old scam, punish senders. Add <code>dry_run:True</code> to preview without deleting.</li>
-    <li><code>/settings</code> — punishment, mute duration, log channel, custom DM template.</li>
-    <li><code>/report</code> — detection stats for this server or globally.</li>
-    <li><code>/about</code> — what this bot is and how many servers it protects.</li>
-    <li><code>/avatar</code> — show a user's avatar in full size.</li>
-    <li><code>/legal</code> — Privacy Policy and Terms of Service links.</li>
-    <li><code>/ping</code> — latency check.</li>
+    <li><code>/scan days:90</code> scans up to 90 days of history, deletes found scam and punishes senders. Add <code>dry_run:True</code> to preview without deleting.</li>
+    <li><code>/settings</code> configures punishment, mute duration, log channel and the DM template.</li>
+    <li><code>/report</code> shows detection stats for this server or globally.</li>
+    <li><code>/about</code> shows what the bot is and how many servers it protects.</li>
+    <li><code>/avatar</code> shows a user's avatar in full size.</li>
+    <li><code>/legal</code> posts the Privacy Policy and Terms of Service links.</li>
+    <li><code>/ping</code> checks latency.</li>
   </ul>
 
   <h2>Links</h2>
   <ul>
     <li><a href="https://discord.com/oauth2/authorize?client_id=1536141767760679082">Add Toaster to your server</a></li>
     <li><a href="https://discord.gg/wCZsphvWVr">Support server</a></li>
+    <li><a href="/docs">Docs</a></li>
     <li><a href="/privacy">Privacy Policy</a></li>
     <li><a href="/tos">Terms of Service</a></li>
   </ul>
