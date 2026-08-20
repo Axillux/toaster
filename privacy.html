@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Toaster</title>
+  <link rel="icon" type="image/png" href="pfp.png">
+</head>
+<body>
+
+  <p><a href="index.html">&larr; Back to Toaster</a></p>
+
+  <h1>Privacy Policy</h1>
+  <p>Last updated: August 2026</p>
+
+  <h2>Overview</h2>
+  <p>
+    Toaster ("the Bot") is an automated anti-scam moderation bot for Discord. It processes
+    message content solely to detect scam (such as MrBeast-style giveaway scam images and
+    texts). This policy explains what is processed, where it goes, how long it is kept,
+    and how to have it removed.
+  </p>
+
+  <h2>What the Bot processes</h2>
+  <ul>
+    <li><strong>Message content:</strong> text and images (attachments, embeds, linked images) in servers where the Bot is active. Images are fetched with strict limits (size, time, public addresses only) and validated before processing.</li>
+    <li><strong>Message metadata:</strong> message IDs, channel IDs, timestamps.</li>
+    <li><strong>Author metadata:</strong> Discord user ID and username of senders whose messages are checked, punished, or found by history scans.</li>
+    <li><strong>Server configuration:</strong> punishment choice, mute duration, log channel, custom DM template.</li>
+    <li><strong>Aggregate counters:</strong> detections, deletions, punishments per server.</li>
+  </ul>
+
+  <h2>Why it is processed</h2>
+  <p>
+    To detect scam (protecting the servers the Bot serves), to execute the moderation
+    actions configured by server administrators, and to maintain the detection database.
+  </p>
+
+  <h2>Third-party processing</h2>
+  <ul>
+    <li><strong>Discord API</strong> — receiving messages, deleting them, applying punishments, sending DMs and log entries.</li>
+    <li><strong>Embedding API (NVIDIA NIM)</strong> — image and text data is transmitted to generate the vector embeddings used for scam matching (model: llama-nemotron-embed-vl-1b-v2). It is processed for that purpose only; no model training or fine-tuning is performed on user data.</li>
+  </ul>
+  <p>The Bot does not sell data and shares it with no other third parties.</p>
+
+  <h2>Storage and retention</h2>
+  <ul>
+    <li>Message content is processed in memory for matching and is <strong>not</strong> stored.</li>
+    <li>Detected scam images awaiting an administrator's decision are stored for a limited period (default: 7 days) and purged automatically if unused.</li>
+    <li>Approved scam/meme reference images stay in the detection database until an administrator removes them.</li>
+    <li>Configuration and aggregate counters live in the Bot's own database, retained while the Bot serves the server.</li>
+    <li>Technical logs may contain message IDs, user IDs and match scores for debugging, rotated by the operator's log policy.</li>
+  </ul>
+
+  <h2>Direct messages</h2>
+  <p>
+    Punished users receive one DM explaining the action. Delivery depends on the
+    recipient's own privacy settings, and the recipient can always block it.
+  </p>
+
+  <h2>Your rights</h2>
+  <ul>
+    <li>Removal: server administrators can remove the Bot (stopping further processing); the operator can delete stored review images and database entries on request.</li>
+    <li>Access: administrators may request the metadata the Bot holds about their server.</li>
+    <li>Complaints: contact the operator through the support channel listed below.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>
+    The Bot operates only inside Discord, whose Terms set a minimum age. No deliberate
+    processing of children's data takes place.
+  </p>
+
+  <h2>Changes</h2>
+  <p>
+    This policy may be updated as features change. Material changes will be announced
+    in the support server.
+  </p>
+
+  <h2>Contact</h2>
+  <p>Support: <a href="https://discord.gg/wCZsphvWVr">https://discord.gg/wCZsphvWVr</a></p>
+
+  <hr>
+
+  <p><a href="index.html">Toaster</a> &nbsp;|&nbsp; <a href="tos.html">Terms of Service</a></p>
+
+</body>
+</html>
