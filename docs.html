@@ -104,23 +104,17 @@
   </p>
   <p>
     <strong>Warning:</strong> make sure normal members really cannot see the channel, or
-    you will punish innocent people. If that happens, the False Positive button undoes
-    what can be undone.
+    you will punish innocent people. If that happens, whitelist them in
+    <code>/settings</code> and lift the punishment by hand.
   </p>
 
-  <h2>False Positive button</h2>
+  <h2>False positives</h2>
   <p>
-    Every "Scam detected" card in the log channel carries a <strong>False Positive</strong>
-    button (Manage Messages or Manage Server, or the bot admin). One click:
-  </p>
-  <ol>
-    <li>Whitelists the author in this server - no checks, no sweeps, no punishment here anymore.</li>
-    <li>Lifts the bot's own temporary ban and clears the timeout where still active. A kick cannot be undone.</li>
-    <li>Queues the matched image into the pending meme list - after the owner's <code>/rebuild</code> the meme match outranks the scam match and the variant stops triggering in every server.</li>
-  </ol>
-  <p>
-    Deleted messages cannot be restored. The button works while the detection is kept
-    (7 days by default); older detections can only be whitelisted via <code>/settings</code>.
+    Detection is probabilistic and can make mistakes. If the bot punishes an innocent
+    member, add them to the user whitelist in <code>/settings</code>: a whitelisted user
+    is never checked or punished again in that server (live detection, <code>/scan</code>,
+    sweeps, cross-server punishment). Temporary bans and timeouts have to be lifted by
+    hand; kicks cannot be undone. Deleted messages cannot be restored.
   </p>
 
   <h2>Temporary bans</h2>
@@ -176,7 +170,7 @@
   <ul>
     <li>The bot never pings anyone. All mentions are rendered as plain text.</li>
     <li>DMs are sent only to users who were punished, and one DM lists every other server that punished them.</li>
-    <li>Detection is probabilistic and can make mistakes. Check the log channel and use the False Positive button.</li>
+    <li>Detection is probabilistic and can make mistakes. Check the log channel; whitelist innocent users in <code>/settings</code>.</li>
     <li>Direct messages are not moderated.</li>
     <li>Everything works per server: punishment, whitelist, honeypot, language and DM template are each server's own choice.</li>
   </ul>
