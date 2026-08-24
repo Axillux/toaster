@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Docs</title>
   <link rel="icon" type="image/png" href="pfp.png">
+  <meta name="description" content="Toaster documentation: how the anti-scam bot works, all commands and settings.">
 </head>
 <body>
 
@@ -15,8 +16,9 @@
   <h2>Getting started</h2>
   <ol>
     <li><a href="https://discord.com/oauth2/authorize?client_id=1536141767760679082">Add Toaster</a> to your server.</li>
-    <li>Give its role the permissions you want it to use (see below).</li>
+    <li>Give its role the permissions you want it to use (see <a href="#permissions">What the bot needs</a>).</li>
     <li>Run <code>/settings</code> and pick a punishment and a log channel.</li>
+    <li>That's it. Every message with text or images is checked from now on.</li>
   </ol>
 
   <h2>How it works</h2>
@@ -26,73 +28,157 @@
   </p>
   <ol>
     <li>The scam message is deleted immediately.</li>
-    <li>The scammer gets a DM explaining why.</li>
+    <li>The scammer gets a DM explaining what happened and why.</li>
     <li>The punishment from your <code>/settings</code> is applied.</li>
-    <li>A sweep removes every other message the account sent, in all channels and threads, and repeats until a pass finds nothing left.</li>
+    <li>A deferred sweep removes every other message the account sent, in all channels and threads, and repeats until a full pass finds nothing left.</li>
   </ol>
   <p>
     A meme database overrides scam matches on known-good images, so regular memes are not
     punished. One detection also punishes the account in every other server Toaster is in,
-    using each server's own settings.
+    using each server's own settings - unless the account is whitelisted there.
   </p>
 
   <h2>Commands</h2>
   <ul>
-    <li><code>/scan days:1-90</code> — clean up old scam. Options: <code>dry_run:True</code> (report only, delete nothing), <code>channel</code> (scan one channel only). Without <code>dry_run</code> it deletes found scam and punishes the senders.</li>
-    <li><code>/settings</code> — punishment, mute duration, log channel, DM template.</li>
-    <li><code>/report</code> — detections, deletions and punishments for this server, or globally with <code>scope:global</code>.</li>
-    <li><code>/about</code> — what the bot is, server and user counts.</li>
-    <li><code>/avatar [user]</code> — full-size avatar.</li>
-    <li><code>/legal</code> — Privacy Policy and Terms of Service links.</li>
-    <li><code>/ping</code> — latency.</li>
+    <li><code>/help</code> - DMs you the link to this documentation.</li>
+    <li><code>/userinfo [user]</code> - account card: username, ID, creation and join dates, banner, full-size avatar.</li>
+    <li><code>/avatar [user]</code> - full-size avatar (1024px, animated avatars stay animated).</li>
+    <li><code>/report [scope]</code> - detections, deletions and punishments for this server, or globally with <code>scope:global</code>.</li>
+    <li><code>/about</code> - what the bot is, live server and user counts.</li>
+    <li><code>/legal</code> - Privacy Policy and Terms of Service links.</li>
+    <li><code>/ping</code> - latency check.</li>
+    <li><code>/scan days:1-90</code> - clean up old scam (see <a href="#scan">/scan</a>). Options: <code>dry_run:True</code> (report only, delete nothing), <code>channel</code> (scan one channel only). Manage Messages required.</li>
+    <li><code>/settings</code> - the full configuration panel (see below). Manage Server required.</li>
+    <li><code>/rebuild</code> - bot owner only. Commits reviewed images into the database and removes duplicates.</li>
   </ul>
 
   <h2>/settings</h2>
+  <p>
+    A Components V2 panel, split into two pages of three sections each, flipped with the
+    arrow buttons at the bottom (the middle button shows the page number). Saving a value
+    keeps you on the same page.
+  </p>
   <ul>
-    <li><strong>Scam Punishment</strong> — mute, kick (default) or ban.</li>
-    <li><strong>Scam Mute Duration</strong> — 1 to 28 days, used when the punishment is mute.</li>
-    <li><strong>Log Channel</strong> — where scam alerts, scan progress and results are posted.</li>
-    <li><strong>DM Template</strong> — the DM text sent to the scammer. Placeholders: <code>{action}</code>, <code>{server}</code>, <code>{days}</code>.</li>
+    <li><strong>Language</strong> - English (default), Русский or Français. Translates the panel itself (including modals), the log cards, the /scan output, the DMs sent to punished users and the public commands. Outside servers the commands follow the invoker's client locale.</li>
+    <li><strong>Scam Punishment</strong> - kick (default), mute or ban.</li>
+    <li><strong>Punishment Duration</strong> - mute: timeout of 1-28 days (28 is Discord's hard cap). Ban: <code>0</code> = permanent, <code>1-28</code> = temporary ban the bot lifts when it expires. The section edits whichever duration the selected punishment uses; kick shows the mute one.</li>
+    <li><strong>Log Channel</strong> - where scam alerts, scan progress and results are posted.</li>
+    <li><strong>Honeypot</strong> - optional trap channel (see <a href="#honeypot">Honeypot</a>). The bot keeps a warning message inside it; text and accent color are editable here.</li>
+    <li><strong>DM Template</strong> - the card DM'd to the scammer. You edit the whole card, not just a line: markdown works (headings, bold, subtext), blank lines split the text into blocks separated by dividers, and a second field sets the card's accent color (hex like <code>#ed4245</code>, empty = the default red). Placeholders: <code>{action}</code>, <code>{server}</code>, <code>{days}</code>. Empty text = the localized default.</li>
+    <li><strong>Whitelist</strong> - up to 25 users, 25 channels and 25 roles exempt from everything (see <a href="#whitelist">Whitelist</a>).</li>
+  </ul>
+  <p>
+    The <strong>View Value</strong> button shows the current values of every setting at once.
+    The bot never pings anyone: all mentions are rendered as plain text.
+  </p>
+
+  <h2 id="whitelist">Whitelist</h2>
+  <p>
+    Whitelisted users, channels (their threads included) and roles are exempt from
+    EVERYTHING the bot does in that server: live detection, <code>/scan</code>, scam-wave
+    sweeps and cross-server punishment. The whitelist outranks an in-flight wave:
+    whitelisting someone mid-wave stops the wave from growing and aborts the pending
+    sweep (already-deleted messages and a landed punishment stay).
+  </p>
+  <ul>
+    <li>Each picker replaces its list; an empty selection clears it.</li>
+    <li>Entries for users who left or deleted channels/roles stay stored and apply again if the user rejoins, but they are no longer pre-selectable - saving a picker drops them.</li>
+    <li>Whitelisted members are also protected in other servers: a server where the user is whitelisted never punishes them for a detection that happened elsewhere.</li>
   </ul>
 
-  <h2>/scan</h2>
+  <h2 id="honeypot">Honeypot</h2>
+  <p>
+    A channel normal members should never see or post in (typically View Channel denied
+    for @everyone). Anyone who posts there is treated as a scammer immediately: the message
+    is deleted, the guild's punishment applies, and the wave sweep cleans up everything
+    else they posted. No embedding check is involved, so it works instantly and even while
+    the scam database is still building. Threads of the honeypot channel count too, and
+    the whitelist outranks the honeypot as everywhere else. Disabled while no channel is
+    selected.
+  </p>
+  <p>
+    The bot keeps exactly one warning message inside the honeypot channel: its text and
+    accent color are editable in <code>/settings</code> (empty text = the localized
+    default). It is edited in place when the text or the server language changes, moved
+    when the channel changes, and deleted when the honeypot is disabled.
+  </p>
+  <p>
+    <strong>Warning:</strong> make sure normal members really cannot see the channel, or
+    you will punish innocent people. If that happens, the False Positive button undoes
+    what can be undone.
+  </p>
+
+  <h2>False Positive button</h2>
+  <p>
+    Every "Scam detected" card in the log channel carries a <strong>False Positive</strong>
+    button (Manage Messages or Manage Server, or the bot admin). One click:
+  </p>
+  <ol>
+    <li>Whitelists the author in this server - no checks, no sweeps, no punishment here anymore.</li>
+    <li>Lifts the bot's own temporary ban and clears the timeout where still active. A kick cannot be undone.</li>
+    <li>Queues the matched image into the pending meme list - after the owner's <code>/rebuild</code> the meme match outranks the scam match and the variant stops triggering in every server.</li>
+  </ol>
+  <p>
+    Deleted messages cannot be restored. The button works while the detection is kept
+    (7 days by default); older detections can only be whitelisted via <code>/settings</code>.
+  </p>
+
+  <h2>Temporary bans</h2>
+  <p>
+    Discord's API has no native ban duration, so the bot lifts temporary bans itself:
+    every scheduled unban is persisted and survives restarts (a ban that expired while
+    the bot was down is lifted on the next startup). On expiry the ban is only lifted
+    when it still carries the bot's own audit-log reason, so a manual re-ban is never
+    undone by mistake. Every lifted ban is announced in the guild's log channel.
+  </p>
+
+  <h2 id="scan">/scan</h2>
   <p>
     Walks channel history back up to 90 days and applies the same detection as live
     moderation. Progress is posted live to the log channel, including a direct link to
     every scam message the moment it is found. When it finishes, the same message becomes
-    the summary: how many messages were checked, what was found, deleted, and whether
-    anything failed. Detected scam variants are sent to the bot owner for review.
+    the summary: how many messages were checked, what was found, deleted, punished, and
+    whether anything failed. Whitelisted channels are skipped whole; whitelisted users'
+    and role members' messages are skipped.
   </p>
+  <ul>
+    <li>By default it <strong>deletes</strong> found scam and punishes the senders (this guild only - live waves are the cross-server ones).</li>
+    <li><code>dry_run:True</code> reports and sends review cards without deleting or punishing anything.</li>
+    <li><code>channel</code> limits the scan to one channel. A channel on the whitelist is refused.</li>
+    <li>A Stop button halts the scan after the current message.</li>
+    <li>Detected scam variants are sent to the bot owner as review cards, oldest first.</li>
+  </ul>
   <p>
-    Run it with <code>dry_run:True</code> first to preview what would be deleted, then
-    without it to actually clean up. Discord rate limits are handled automatically, so
-    large scans simply take longer.
+    Discord rate limits are handled automatically, so large scans simply take longer.
+    Run with <code>dry_run:True</code> first to preview what would be deleted.
   </p>
 
-  <h2>What the bot needs</h2>
+  <h2 id="permissions">What the bot needs</h2>
   <ul>
     <li>Delete messages: <strong>Manage Messages</strong>, View Channel, Read Message History.</li>
     <li>Kick: <strong>Kick Members</strong>.</li>
     <li>Ban: <strong>Ban Members</strong>.</li>
     <li>Mute: <strong>Moderate Members</strong> (Timeout Members).</li>
+    <li>Log channel: View Channel and Send Messages there.</li>
     <li>The bot's role must be above the members it should punish. Server owners cannot be punished.</li>
-    <li>For the log channel: View Channel and Send Messages there.</li>
   </ul>
 
   <h2>Review cards</h2>
   <p>
     Every detected scam is also sent to the owner as a card with the image and buttons:
-    add to the scam database, add to the meme database, or ignore. New variants approved
-    this way improve detection for everyone. Server admins see every incident in their
-    log channel.
+    add to the scam database, add to the meme database, or ignore. Approved images are
+    committed on <code>/rebuild</code> (which also removes near-duplicate images
+    automatically). New variants approved this way improve detection for everyone.
+    Server admins see every incident in their own log channel.
   </p>
 
   <h2>Notes</h2>
   <ul>
     <li>The bot never pings anyone. All mentions are rendered as plain text.</li>
-    <li>DMs are sent only to users who were punished.</li>
-    <li>Detection can make mistakes. Check the log channel and adjust the database through review cards.</li>
-    <li>DMs (direct messages) are not moderated.</li>
+    <li>DMs are sent only to users who were punished, and one DM lists every other server that punished them.</li>
+    <li>Detection is probabilistic and can make mistakes. Check the log channel and use the False Positive button.</li>
+    <li>Direct messages are not moderated.</li>
+    <li>Everything works per server: punishment, whitelist, honeypot, language and DM template are each server's own choice.</li>
   </ul>
 
   <hr>
