@@ -47,14 +47,17 @@
     <li><code>/about</code> - what the bot is, live server and user counts.</li>
     <li><code>/legal</code> - Privacy Policy and Terms of Service links.</li>
     <li><code>/ping</code> - latency check.</li>
-    <li><code>/scan days:1-90</code> - clean up old scam (see <a href="#scan">/scan</a>). Options: <code>dry_run:True</code> (report only, delete nothing), <code>channel</code> (scan one channel only). Manage Messages required.</li>
+    <li><code>/scan now days:1-90</code> - clean up old scam (see <a href="#scan">/scan</a>). Options: <code>dry_run:True</code> (report only, delete nothing), <code>channel</code> (scan one channel only). Manage Messages required.</li>
+    <li><code>/scan schedule</code> - premium: the weekly auto-scan settings (see <a href="#premium">Premium</a>).</li>
+    <li><code>/stats [days:1-90]</code> - premium: moderation statistics as an image for the last days (default 7). Manage Messages required.</li>
+    <li><code>/premium</code> - premium status, free trial and purchase ($2/mo) for this server.</li>
     <li><code>/settings</code> - the full configuration panel (see below). Manage Server required.</li>
     <li><code>/rebuild</code> - bot owner only. Commits reviewed images into the database and removes duplicates.</li>
   </ul>
 
   <h2>/settings</h2>
   <p>
-    A Components V2 panel, split into two pages of three sections each, flipped with the
+    A Components V2 panel, split into pages of three sections each, flipped with the
     arrow buttons at the bottom (the middle button shows the page number). Saving a value
     keeps you on the same page.
   </p>
@@ -66,6 +69,7 @@
     <li><strong>Honeypot</strong> - optional trap channel (see <a href="#honeypot">Honeypot</a>). The bot keeps a warning message inside it; text and accent color are editable here.</li>
     <li><strong>DM Template</strong> - the card DM'd to the scammer. You edit the whole card, not just a line: markdown works (headings, bold, subtext), blank lines split the text into blocks separated by dividers, and a second field sets the card's accent color (hex like <code>#ed4245</code>, empty = the default red). Placeholders: <code>{action}</code>, <code>{server}</code>, <code>{days}</code>. Empty text = the localized default.</li>
     <li><strong>Whitelist</strong> - up to 25 users, 25 channels and 25 roles exempt from everything (see <a href="#whitelist">Whitelist</a>).</li>
+    <li><strong>Premium</strong> - while premium is active: weekly auto-scan, weekly stats image and repeat-offender escalation, each with its own toggle and weekday picker (see <a href="#premium">Premium</a>). Without premium the section shows a locked hint.</li>
   </ul>
   <p>
     The <strong>View Value</strong> button shows the current values of every setting at once.
@@ -146,6 +150,28 @@
     Discord rate limits are handled automatically, so large scans simply take longer.
     Run with <code>dry_run:True</code> first to preview what would be deleted.
   </p>
+
+  <h2 id="premium">Premium</h2>
+  <p>
+    Premium costs $2/month per server (7-day free trial, one per server forever) and is
+    managed with <code>/premium</code>: pay, and it activates automatically. Free servers:
+    <code>/scan</code> up to 30 days deep, once per day. Premium servers:
+  </p>
+  <ul>
+    <li><code>/scan</code> up to 90 days deep, unlimited.</li>
+    <li><strong>Weekly auto-scan</strong> - the 90-day cleanup runs by itself once a week on
+      the weekday you pick (at 12:00 UTC), with the same live progress and summary in the
+      log channel. Toggle and weekday live in <code>/settings</code> → Premium or in
+      <code>/scan schedule</code>.</li>
+    <li><strong>Weekly stats image</strong> - a chart image of daily detections, deletions
+      and punishments posted to the log channel every week on your weekday. The same image
+      is available at any moment with <code>/stats days:1-90</code> (default 7).</li>
+    <li><strong>Repeat-offender escalation</strong> - instead of the configured punishment,
+      a repeat offender gets the punishment picked for their tier. The 2nd offense and the
+      3rd+ are set separately from presets: kick, mute 1/7/28 days, ban 1/7/28 days or a
+      permanent ban (defaults: ban 7 days, then permanent ban). Counts and escalates per
+      server; only punishments that actually landed are counted.</li>
+  </ul>
 
   <h2 id="permissions">What the bot needs</h2>
   <ul>
