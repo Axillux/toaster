@@ -39,7 +39,7 @@
   <h2>Third-party processing</h2>
   <ul>
     <li><strong>Discord API:</strong> receiving messages, deleting them, applying punishments, sending DMs and log entries.</li>
-    <li><strong>Embedding API (NVIDIA NIM):</strong> image and text data is transmitted to generate the vector embeddings used for scam matching (model: llama-nemotron-embed-vl-1b-v2). It is processed for that purpose only; no model training or fine-tuning is performed on user data.</li>
+    <li>Image matching runs on the Bot's own server with a local embedding model; image and text content is not transmitted to any third-party AI service.</li>
   </ul>
   <p>The Bot does not sell data and shares it with no other third parties.</p>
 
